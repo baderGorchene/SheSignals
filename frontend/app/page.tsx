@@ -1,142 +1,54 @@
-"use client";
-
-import React, { useState } from "react";
-import { FIELDS } from "./fields";
-
-// 🔥 Update this to your current ngrok URL (no trailing slash)
-// 🔥 Updated to local FastAPI backend
-const API_BASE = "http://localhost:8001";
+import Link from 'next/link';
+import { ArrowRight, ShieldCheck, Activity, Target } from 'lucide-react';
 
 export default function Home() {
-  const [output, setOutput] = useState("Submission preview will appear here…");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const payload: Record<string, unknown> = {};
-
-    let isValid = true;
-    for (const f of FIELDS) {
-      const val = formData.get(f.id);
-
-      if (!val || val === "") {
-        payload[f.question] = null;
-        continue;
-      }
-
-      const numVal = Number(val);
-
-      if (f.type === "number") {
-        if (isNaN(numVal) || (f.min !== undefined && numVal < f.min) || (f.max !== undefined && numVal > f.max)) {
-          alert(`Value out of range for: ${f.question}\nExpected ${f.min}–${f.max}`);
-          const el = document.getElementById(f.id);
-          el?.focus();
-          isValid = false;
-          break;
-        }
-      }
-
-      payload[f.question] = numVal;
-    }
-
-    if (!isValid) return;
-
-    setOutput("Submitting to model…");
-    setIsSubmitting(true);
-
-    try {
-      const res = await fetch(`${API_BASE}/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ features: payload }),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`API error ${res.status}: ${text}`);
-      }
-
-      const result = await res.json();
-
-      setOutput(
-        `✅ MODEL RESPONSE\n\n` +
-        `Recommendation (0/1): ${result.Recommendation}\n` +
-        `vote_count (0..3): ${result.vote_count}\n` +
-        `votes: ${JSON.stringify(result.votes)}\n\n` +
-        `Sent features (JSON):\n\n` +
-        JSON.stringify(payload, null, 2)
-      );
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setOutput(
-        `❌ ERROR calling model API\n\n${errorMessage}\n\n` +
-        `Troubleshooting:\n` +
-        `- Confirm the Python backend is running (uv run python server.py)\n` +
-        `- Confirm API_BASE matches http://localhost:8001\n` +
-        `- Confirm CORS is enabled on the FastAPI server`
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleClear = () => {
-    const form = document.getElementById("intakeForm") as HTMLFormElement;
-    form.reset();
-    setOutput("Submission preview will appear here…");
-  };
-
   return (
-    <div className="wrap">
-      <header>
-        <h1>Autism Screening Intake (Prototype)</h1>
-        <p className="sub">Two-column form generated from your training template. This page collects inputs and shows a JSON preview on submit.</p>
-      </header>
-
-      <form id="intakeForm" onSubmit={handleSubmit}>
-        {FIELDS.map((f) => (
-          <div className="row" key={f.id}>
-            <div className="q">{f.question}</div>
-            <div className="a">
-              {f.type === "select" ? (
-                <select id={f.id} name={f.id} required defaultValue="">
-                  <option value="" disabled>Select…</option>
-                  {f.options?.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  id={f.id}
-                  name={f.id}
-                  type="number"
-                  min={f.min}
-                  max={f.max}
-                  step="1"
-                  required
-                />
-              )}
-              <div className="hint">{f.hint}</div>
-            </div>
+    <div style={{ maxWidth: "1080px", margin: "0 auto", padding: "0 16px" }}>
+      {/* Hero Section */}
+      <section style={{ textAlign: "center", padding: "4rem 0 3rem" }}>
+          <h1 style={{ fontSize: "3rem", fontWeight: 800, marginBottom: "1.5rem", background: "linear-gradient(to right, #e2e8f0, #94a3b8)", WebkitBackgroundClip: "text", color: "transparent" }}>
+              Accelerating Autism Insights<br />with Machine Learning
+          </h1>
+          <p style={{ fontSize: "1.25rem", color: "var(--muted)", maxWidth: "700px", margin: "0 auto 3rem", lineHeight: 1.6 }}>
+              A clinical decision-support tool utilizing Logistic Regression, Random Forests, and XGBoost to evaluate ASD characteristics accurately and securely.
+          </p>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+              <Link href="/screening" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.875rem 1.5rem", background: "#38bdf8", color: "#0f172a", borderRadius: "8px", fontWeight: 600, fontSize: "1.1rem", textDecoration: "none" }}>
+                  Run Screening Form <ArrowRight size={20} />
+              </Link>
+              <Link href="/technology" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.875rem 1.5rem", background: "rgba(255,255,255,0.05)", color: "var(--text)", border: "1px solid var(--border)", borderRadius: "8px", fontWeight: 600, fontSize: "1.1rem", textDecoration: "none" }}>
+                  View Model Details
+              </Link>
           </div>
-        ))}
+      </section>
 
-        <div className="actions">
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit"}
-          </button>
-          <button type="button" id="clearBtn" onClick={handleClear}>
-            Clear
-          </button>
-        </div>
-      </form>
+      {/* Feature Grid */}
+      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem", padding: "4rem 0" }}>
+          
+          <div style={{ background: "var(--panel)", padding: "2rem", borderRadius: "12px", border: "1px solid var(--border)" }}>
+              <ShieldCheck size={36} color="#38bdf8" style={{ marginBottom: "1rem" }} />
+              <h3 style={{ fontSize: "1.25rem", marginTop: 0, marginBottom: "0.75rem" }}>Secure & Confidential</h3>
+              <p style={{ color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
+                  Data is processed strictly in-memory over HTTPS. Results are returned instantly without persistent storage.
+              </p>
+          </div>
 
-      <div className="out" id="output">
-        {output}
-      </div>
+          <div style={{ background: "var(--panel)", padding: "2rem", borderRadius: "12px", border: "1px solid var(--border)" }}>
+              <Target size={36} color="#38bdf8" style={{ marginBottom: "1rem" }} />
+              <h3 style={{ fontSize: "1.25rem", marginTop: 0, marginBottom: "0.75rem" }}>High Accuracy Ensembles</h3>
+              <p style={{ color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
+                  Three pre-trained ML models validate exactly 36 behavioral variables to generate precise confidence scores.
+              </p>
+          </div>
+
+          <div style={{ background: "var(--panel)", padding: "2rem", borderRadius: "12px", border: "1px solid var(--border)" }}>
+              <Activity size={36} color="#38bdf8" style={{ marginBottom: "1rem" }} />
+              <h3 style={{ fontSize: "1.25rem", marginTop: 0, marginBottom: "0.75rem" }}>Live API Health Check</h3>
+              <p style={{ color: "var(--muted)", margin: 0, lineHeight: 1.5 }}>
+                  Our highly available backend guarantees model serialization and dynamic response logic via FastAPI lifetimes.
+              </p>
+          </div>
+      </section>
     </div>
   );
 }
