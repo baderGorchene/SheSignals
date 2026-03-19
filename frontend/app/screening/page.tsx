@@ -21,7 +21,8 @@ export default function Home() {
       const val = formData.get(f.id);
 
       if (!val || val === "") {
-        payload[f.question] = null;
+        // Omit the key entirely so Pydantic uses its default=0.0 value
+        // Passing null explicitly throws a 422 error because the schema expects a float
         continue;
       }
 
