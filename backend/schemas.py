@@ -42,7 +42,6 @@ class PredictionFeatures(BaseModel):
     demonstrates_strong_emotional_reactions_in_intense_situations_e_g_anger_crying_withdrawal: float = Field(default=0.0, alias="Demonstrates strong emotional reactions in intense situations (e.g., anger, crying, withdrawal)")
 
 class PredictionRequest(BaseModel):
-    model: str = Field(default='lr', description='Select the ML model: lr, rf, or xgb')
     features: PredictionFeatures
 
 class PredictionResponse(BaseModel):

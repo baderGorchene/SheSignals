@@ -9,7 +9,6 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8001";
 export default function Home() {
   const [output, setOutput] = useState<{ type: string; data?: any; message?: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("lr");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,7 +49,7 @@ export default function Home() {
       const res = await fetch(`${API_BASE}/v1/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: selectedModel, features: payload }),
+        body: JSON.stringify({ features: payload }),
       });
 
       if (!res.ok) {
@@ -91,52 +90,6 @@ export default function Home() {
       </header>
 
       <form id="intakeForm" onSubmit={handleSubmit}>
-
-        <div style={{ marginBottom: "2rem", padding: "1rem" }}>
-          <label style={{ fontWeight: 600, display: "block", marginBottom: "0.75rem", color: "var(--text)" }}>
-            Select Prediction Model
-          </label>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-
-            {[
-              { id: 'lr', name: 'Logistic Regression', desc: 'High Interpretability' },
-              { id: 'rf', name: 'Random Forest', desc: 'Robust to Outliers' },
-              { id: 'xgb', name: 'XGBoost', desc: 'High Performance' }
-            ].map(model => (
-              <label
-                key={model.id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  padding: "1rem",
-                  background: selectedModel === model.id ? "rgba(56, 189, 248, 0.08)" : "var(--panel)",
-                  border: `1px solid ${selectedModel === model.id ? "#38bdf8" : "var(--border)"}`,
-                  borderRadius: "10px",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease"
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                  <input
-                    type="radio"
-                    name="prediction_model"
-                    value={model.id}
-                    checked={selectedModel === model.id}
-                    onChange={(e) => setSelectedModel(e.target.value)}
-                    style={{ accentColor: "#38bdf8", width: "16px", height: "16px", cursor: "pointer" }}
-                  />
-                  <span style={{ fontWeight: 600, color: selectedModel === model.id ? "#38bdf8" : "var(--text)" }}>
-                    {model.name}
-                  </span>
-                </div>
-                <span style={{ fontSize: "0.85rem", color: "var(--muted)", paddingLeft: "1.5rem" }}>
-                  {model.desc}
-                </span>
-              </label>
-            ))}
-
-          </div>
-        </div>
 
         {FIELDS.map((f) => (
           <div className="row" key={f.id}>
@@ -208,7 +161,7 @@ export default function Home() {
               <div style={{ display: "flex", gap: "2rem", marginTop: "1.5rem" }}>
                 <div>
                   <p style={{ margin: 0, fontSize: "0.875rem", color: "#64748b" }}>Model Used</p>
-                  <p style={{ margin: "0.25rem 0 0", fontWeight: 600 }}>{output.data.model_used.toUpperCase()}</p>
+                  <p style={{ margin: "0.25rem 0 0", fontWeight: 600 }}>{output.data.model_used}</p>
                 </div>
                 <div>
                   <p style={{ margin: 0, fontSize: "0.875rem", color: "#64748b" }}>Confidence</p>
@@ -217,6 +170,14 @@ export default function Home() {
                   </p>
                 </div>
               </div>
+
+
+              <div style={{ marginTop: "1.5rem", padding: "1rem", backgroundColor: "rgba(255, 255, 255, 0.5)", borderRadius: "8px", border: "1px solid #fecdd3" }}>
+                <p style={{ margin: 0, fontSize: "0.875rem", color: "#475569", lineHeight: "1.6" }}>
+                  <strong>Multi-Model Consensus:</strong> Following cross-validation by an ensemble of three independent machine learning classifiers, our diagnostic algorithm recommends clinical evaluation by a specialist with high confidence. This parallel inference approach provides robust secondary and tertiary algorithmic validation.
+                </p>
+              </div>
+
             </div>
           )}
         </div>

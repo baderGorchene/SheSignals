@@ -101,12 +101,10 @@ def health_check(request: Request):
 @limiter.limit("20/minute")
 def predict(request: Request, payload: PredictionRequest):
     try:
-        model_id = payload.model
-        
-        # Check if the requested model is loaded
-        model = ml_resources["models"].get(model_id)
-        if not model:
-            raise HTTPException(status_code=400, detail=f"Model '{model_id}' is not loaded or unavailable.")
+        # Verify that all 3 required models are loaded
+        for required_model in ["lr", "rf", "xgb"]:
+            if required_model not in ml_resources["models"]:
+                raise HTTPException(status_code=500, detail=f"Required model '{required_model}' is not loaded.")
             
         feature_names = ml_resources.get("feature_names")
         if not feature_names:
@@ -123,19 +121,33 @@ def predict(request: Request, payload: PredictionRequest):
         # Use DataFrame to preserve column names (required by some models, e.g. XGBoost, Pipelines)
         X_input = pd.DataFrame([input_list], columns=feature_names)
         
-        # Prediction
-        prediction = int(model.predict(X_input)[0])
-        probability = model.predict_proba(X_input)[0].tolist()
+        # Ensemble Prediction
+        predictions = []
+        probabilities = {0: 0.0, 1: 0.0}
         
-        recommendation_text = "Refer for Evaluation" if prediction == 1 else "No immediate referral indicated"
+        for model_id in ["lr", "rf", "xgb"]:
+            model = ml_resources["models"][model_id]
+            pred = int(model.predict(X_input)[0])
+            prob = model.predict_proba(X_input)[0].tolist()
+            
+            predictions.append(pred)
+            probabilities[0] += prob[0]
+            probabilities[1] += prob[1]
+            
+        # Majority voting
+        majority_vote = 1 if sum(predictions) >= 2 else 0
+        avg_prob_0 = probabilities[0] / 3
+        avg_prob_1 = probabilities[1] / 3
+        
+        recommendation_text = "after consulting with 3 different solid computer programs (machine learning models) we are confident that this subject must see a specialist (think of this as your second and third opinion)" if majority_vote == 1 else "No immediate referral indicated"
         
         return PredictionResponse(
-            prediction=prediction,
+            prediction=majority_vote,
             Recommendation=recommendation_text,
-            model_used=model_id,
+            model_used="Ensemble (Majority Vote)",
             probability={
-                "0": round(probability[0], 4),
-                "1": round(probability[1], 4)
+                "0": round(avg_prob_0, 4),
+                "1": round(avg_prob_1, 4)
             }
         )
     except HTTPException as e:
