@@ -6,8 +6,8 @@ export default function Home() {
     return (
         <div style={{ maxWidth: "1080px", margin: "0 auto", padding: "0 16px" }}>
             {/* Hero Section */}
-            <section style={{ textAlign: "center", padding: "4rem 0 3rem" }}>
-                <Image src="/center_logo.png" alt="Application Logo" width={200} height={200} priority style={{ display: "inline-block", marginBottom: "2rem" }} />
+            <section style={{ textAlign: "center", padding: "2rem 0 2rem" }}>
+                <Image src="/center_logo.png" alt="Application Logo" width={200} height={200} priority style={{ display: "inline-block" }} />
                 <h1 style={{ fontSize: "3rem", fontWeight: 800, marginBottom: "1.5rem", background: "linear-gradient(to right, #e2e8f0, #94a3b8)", WebkitBackgroundClip: "text", color: "transparent" }}>
                     Accelerating Autism Insights<br />with Machine Learning
                 </h1>
