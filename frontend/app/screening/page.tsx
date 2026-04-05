@@ -87,7 +87,7 @@ export default function Home() {
     <div className="wrap">
       <header style={{ border: "none", background: "transparent", padding: 0 }}>
         <h2 style={{ textAlign: "center", marginBottom: "1.5rem", color: "#ffffff" }}>
-            Fill out the screening form below to request a prediction from our technology
+          Fill out the screening form below to request a prediction from our technology
         </h2>
       </header>
 
@@ -172,14 +172,6 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-
-
-              <div style={{ marginTop: "1.5rem", padding: "1rem", backgroundColor: "rgba(255, 255, 255, 0.5)", borderRadius: "8px", border: "1px solid #fecdd3" }}>
-                <p style={{ margin: 0, fontSize: "0.875rem", color: "#475569", lineHeight: "1.6" }}>
-                  <strong>Multi-Model Consensus:</strong> Following cross-validation by an ensemble of three independent machine learning classifiers, our diagnostic algorithm recommends clinical evaluation by a specialist with high confidence. This parallel inference approach provides robust secondary and tertiary algorithmic validation.
-                </p>
-              </div>
-
             </div>
           )}
         </div>

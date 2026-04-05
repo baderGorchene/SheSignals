@@ -39,7 +39,6 @@ export default function RootLayout({
 
             <div className="nav-links" style={{ display: "flex", gap: "2rem", alignItems: "center", fontSize: "0.9rem", fontWeight: 500 }}>
               <Link href="/" style={{ textDecoration: "none", color: "var(--muted)" }}>Home Page</Link>
-              <Link href="/technology" style={{ textDecoration: "none", color: "var(--muted)" }}>Technology</Link>
 
               <ThemeToggle />
 

@@ -213,7 +213,7 @@ def predict(request: Request, payload: PredictionRequest):
         prediction    = int(xgb_prob[1] >= xgb_threshold)
 
         recommendation_text = (
-            "after an in-depth analysis by our optimized XGBoost model, "
+            "after an in-depth analysis by our AI, "
             "we are confident that this subject must see a specialist "
             "(think of this as your second and third opinion)"
             if prediction == 1 else "No immediate referral indicated"
