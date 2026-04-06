@@ -58,7 +58,6 @@ export default function RootLayout({
             <p>© {new Date().getFullYear()} SheSignals, LLC. All rights reserved.</p>
             <div style={{ display: "flex", gap: "1.5rem" }}>
               <Link href="/privacy" style={{ textDecoration: "none", color: "var(--muted)" }}>Privacy Policy</Link>
-              <Link href="/contact" style={{ textDecoration: "none", color: "var(--muted)" }}>Contact Us</Link>
             </div>
           </footer>
         </ThemeProvider>

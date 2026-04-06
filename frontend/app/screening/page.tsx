@@ -91,6 +91,25 @@ export default function Home() {
         </h2>
       </header>
 
+      <div style={{
+        background: "rgba(255, 255, 255, 0.03)",
+        padding: "2rem",
+        borderRadius: "16px",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        position: "relative",
+        overflow: "hidden",
+        marginBottom: "2rem",
+        color: "#ffffff"
+      }}>
+        <div style={{ position: "absolute", top: "-4rem", right: "-4rem", width: "16rem", height: "16rem", background: "rgba(254, 112, 215, 0.15)", filter: "blur(60px)", borderRadius: "50%", zIndex: 0 }}></div>
+        <h3 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem", color: "#fe70d7", position: "relative", zIndex: 10 }}>Our Technology & Medical Disclaimer</h3>
+        <p style={{ lineHeight: 1.6, position: "relative", zIndex: 10, fontSize: "0.95rem" }}>
+          SheSignals uses an optimized <strong style={{ color: "#fe70d7" }}>XGBoost</strong> model to analyze structured responses from parents, guardians, and educators across 36 behavioral and developmental indicators. The model is enhanced with <strong style={{ color: "#fe70d7" }}>domain-level feature engineering</strong> — computing composite scores across social, sensory, emotional, communication, masking, and routine behaviors — bringing the total to 46 analytical dimensions. Trained with <strong style={{ color: "#fe70d7" }}>Bayesian hyperparameter optimization</strong> and a clinically tuned decision threshold, the system maximises recall to minimise missed cases.
+          <br /><br />
+          The result is a confidence-based recommendation that helps families determine whether seeking a specialist evaluation may be beneficial. <strong style={{ color: "#fe70d7" }}>The technology is designed to support early awareness and professional follow-up, not replace clinical diagnosis.</strong>
+        </p>
+      </div>
+
       <form id="intakeForm" onSubmit={handleSubmit}>
 
         {FIELDS.map((f) => (
